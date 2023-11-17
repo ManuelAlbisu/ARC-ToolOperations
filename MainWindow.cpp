@@ -99,12 +99,43 @@ void MainWindow::createButtons() {
     m_buttonReturnGrinder->setIconSize(QSize(iconWidth, iconHeight));
 }
 
+/* disables buttons while performing tool operations */
+void MainWindow::disableOtherButtons(QPushButton *exclude) {
+    m_buttonReturnHome->setEnabled(m_buttonReturnHome == exclude);
+    m_buttonCutPipe->setEnabled(m_buttonCutPipe == exclude);
+    m_buttonWriteDoe->setEnabled(m_buttonWriteDoe == exclude);
+    m_buttonGetMarker->setEnabled(m_buttonGetMarker == exclude);
+    m_buttonReturnMarker->setEnabled(m_buttonReturnMarker == exclude);
+    m_buttonGetGrinder->setEnabled(m_buttonGetGrinder == exclude);
+    m_buttonReturnGrinder->setEnabled(m_buttonReturnGrinder == exclude);
+}
+
+/* enables all buttons once tool operation has completed */
+void MainWindow::enableAllButtons() {
+    m_buttonReturnHome->setEnabled(true);
+    m_buttonCutPipe->setEnabled(true);
+    m_buttonWriteDoe->setEnabled(true);
+    m_buttonGetMarker->setEnabled(true);
+    m_buttonReturnMarker->setEnabled(true);
+    m_buttonGetGrinder->setEnabled(true);
+    m_buttonReturnGrinder->setEnabled(true);
+}
+
+/* creates the timer(s) */
+void MainWindow::createTimers() {
+    /* initializes the timeout timer */
+    m_timeout = new QTimer(this);
+    connect(m_timeout, &QTimer::timeout, this, &MainWindow::enableAllButtons);
+}
+
 /* returns arm to its home position */
 void MainWindow::returnHome() {
     QObject::connect(m_buttonReturnHome, &QPushButton::clicked, this, [this]() {
         QStringList args;
         args << "doeDemo.py" << "home(urx.Robot('10.0.0.12'))";
         m_process->start("python3", args);
+        disableOtherButtons(m_buttonReturnHome);
+        m_timeout->start(30000);
     });
 }
 
@@ -115,6 +146,8 @@ void MainWindow::cutPipe() {
         args << "doeDemo.py" << "cutPipe(0.05, 0.05, urx.Robot('10.0.0.12'))";
         // args << "doeDemo.py" << "cutPipe(acc, vel, robot)";
         m_process->start("python3", args);
+        disableOtherButtons(m_buttonCutPipe);
+        m_timeout->start(30000);
     });
 }
 
@@ -124,6 +157,8 @@ void MainWindow::writeDoe() {
         QStringList args;
         args << "doeDemo.py" << "writeDoe(0.05, 0.05, urx.Robot('10.0.0.12'))";
         m_process->start("python3", args);
+        disableOtherButtons(m_buttonWriteDoe);
+        m_timeout->start(30000);
     });
 }
 
@@ -133,6 +168,8 @@ void MainWindow::getMarker() {
         QStringList args;
         args << "doeDemo.py" << "getMarker(0.05, 0.05, urx.Robot('10.0.0.12'), board.get_pin(f'd:{8}:o'))";
         m_process->start("python3", args);
+        disableOtherButtons(m_buttonGetMarker);
+        m_timeout->start(30000);
     });
 }
 
@@ -142,6 +179,8 @@ void MainWindow::returnMarker() {
         QStringList args;
         args << "doeDemo.py" << "returnMarker(0.05, 0.05, urx.Robot('10.0.0.12'), board.get_pin(f'd:{8}:o'))";
         m_process->start("python3", args);
+        disableOtherButtons(m_buttonReturnMarker);
+        m_timeout->start(30000);
     });
 }
 
@@ -151,6 +190,8 @@ void MainWindow::getGrinder() {
         QStringList args;
         args << "doeDemo.py" << "getGrinder(0.05, 0.05, urx.Robot('10.0.0.12'), board.get_pin(f'd:{8}:o'))";
         m_process->start("python3", args);
+        disableOtherButtons(m_buttonGetGrinder);
+        m_timeout->start(30000);
     });
 }
 
@@ -160,5 +201,7 @@ void MainWindow::returnGrinder() {
         QStringList args;
         args << "doeDemo.py" << "returnGrinder(0.05, 0.05, urx.Robot('10.0.0.12'), board.get_pin(f'd:{8}:o'))";
         m_process->start("python3", args);
+        disableOtherButtons(m_buttonReturnGrinder);
+        m_timeout->start(30000);
     });
 }

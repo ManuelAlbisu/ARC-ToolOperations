@@ -5,6 +5,7 @@
 
 #include <QPushButton>
 #include <QProcess>
+#include <QTimer>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -16,6 +17,9 @@ public:
 private:
     /* functionality */
     void createButtons();
+    void disableOtherButtons(QPushButton *exclude);
+    void enableAllButtons();
+    void createTimers();
 
     /* tool operations */
     void returnHome();
@@ -36,6 +40,8 @@ private:
     QPushButton *m_buttonReturnGrinder;
 
     QProcess *m_process;
+
+    QTimer *m_timeout;
 };
 
 #endif // MAINWINDOW_H
