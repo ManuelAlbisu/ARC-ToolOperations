@@ -19,6 +19,10 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS
     Widgets
 )
 
+find_package(Python3 REQUIRED COMPONENTS
+    NumPy
+)
+
 set(PROJECT_SOURCES
         main.cpp
         MainWindow.cpp

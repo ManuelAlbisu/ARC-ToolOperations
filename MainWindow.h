@@ -5,6 +5,7 @@
 
 #include <QPushButton>
 #include <QProcess>
+#include <QProgressBar>
 #include <QTimer>
 
 class MainWindow : public QMainWindow {
@@ -19,6 +20,8 @@ private:
     void createButtons();
     void disableOtherButtons(QPushButton *exclude);
     void enableAllButtons();
+    void createProgressBars();
+    void updateTimeoutProgress();
     void createTimers();
 
     /* tool operations */
@@ -41,7 +44,12 @@ private:
 
     QProcess *m_process;
 
+    /* progress bar(s) */
+    QProgressBar *m_timeoutProgressBar;
+
+    /* timer(s) */
     QTimer *m_timeout;
+    int m_timeoutDuration;
 };
 
 #endif // MAINWINDOW_H

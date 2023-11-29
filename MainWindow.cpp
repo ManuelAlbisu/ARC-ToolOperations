@@ -8,6 +8,7 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     createButtons();
+    createProgressBars();
 
     m_process = new QProcess(this);
 
@@ -45,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     mainLayout->addLayout(bottomButtonLayout);
     mainLayout->addWidget(hLine);
     mainLayout->addLayout(homeButtonLayout);
+    mainLayout->addWidget(m_timeoutProgressBar);
 
     centralWidget->setLayout(mainLayout);
     setCentralWidget(centralWidget);
@@ -52,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
 MainWindow::~MainWindow() { }
 
+/* creates the buttons */
 void MainWindow::createButtons() {
     int iconWidth = 50;
     int iconHeight = 50;
@@ -121,11 +124,34 @@ void MainWindow::enableAllButtons() {
     m_buttonReturnGrinder->setEnabled(true);
 }
 
+/* creates the progress bar(s) */
+void MainWindow::createProgressBars() {
+    /* creates a progress bar for the timeout timer */
+    int m_timeoutDuration = 30000;
+    m_timeoutProgressBar = new QProgressBar(this);
+    m_timeoutProgressBar->hide();
+    m_timeoutProgressBar->setMaximum(m_timeoutDuration);
+    m_timeoutProgressBar->setValue(m_timeoutDuration);
+}
+
+/* updates the timeout progress bar */
+void MainWindow::updateTimeoutProgress() {
+    int remainingTime = m_timeout->remainingTime();
+    m_timeoutProgressBar->show();
+    m_timeoutProgressBar->setValue(remainingTime);
+
+    if(remainingTime <= 0) {
+        enableAllButtons();
+        m_timeoutProgressBar->setValue(m_timeoutDuration);
+        m_timeout->stop();
+    }
+}
+
 /* creates the timer(s) */
 void MainWindow::createTimers() {
     /* initializes the timeout timer */
     m_timeout = new QTimer(this);
-    connect(m_timeout, &QTimer::timeout, this, &MainWindow::enableAllButtons);
+    connect(m_timeout, &QTimer::timeout, this, &MainWindow::updateTimeoutProgress);
 }
 
 /* returns arm to its home position */
@@ -135,7 +161,8 @@ void MainWindow::returnHome() {
         args << "doeDemo.py" << "home(urx.Robot('10.0.0.12'))";
         m_process->start("python3", args);
         disableOtherButtons(m_buttonReturnHome);
-        m_timeout->start(30000);
+        m_timeout->start(m_timeoutDuration);
+        QTimer::singleShot(100, this, &MainWindow::updateTimeoutProgress);
     });
 }
 
@@ -144,10 +171,10 @@ void MainWindow::cutPipe() {
     QObject::connect(m_buttonCutPipe, &QPushButton::clicked, this, [this]() {
         QStringList args;
         args << "doeDemo.py" << "cutPipe(0.05, 0.05, urx.Robot('10.0.0.12'))";
-        // args << "doeDemo.py" << "cutPipe(acc, vel, robot)";
         m_process->start("python3", args);
         disableOtherButtons(m_buttonCutPipe);
-        m_timeout->start(30000);
+        m_timeout->start(m_timeoutDuration);
+        QTimer::singleShot(100, this, &MainWindow::updateTimeoutProgress);
     });
 }
 
@@ -158,7 +185,8 @@ void MainWindow::writeDoe() {
         args << "doeDemo.py" << "writeDoe(0.05, 0.05, urx.Robot('10.0.0.12'))";
         m_process->start("python3", args);
         disableOtherButtons(m_buttonWriteDoe);
-        m_timeout->start(30000);
+        m_timeout->start(m_timeoutDuration);
+        QTimer::singleShot(100, this, &MainWindow::updateTimeoutProgress);
     });
 }
 
@@ -169,7 +197,8 @@ void MainWindow::getMarker() {
         args << "doeDemo.py" << "getMarker(0.05, 0.05, urx.Robot('10.0.0.12'), board.get_pin(f'd:{8}:o'))";
         m_process->start("python3", args);
         disableOtherButtons(m_buttonGetMarker);
-        m_timeout->start(30000);
+        m_timeout->start(m_timeoutDuration);
+        QTimer::singleShot(100, this, &MainWindow::updateTimeoutProgress);
     });
 }
 
@@ -180,7 +209,8 @@ void MainWindow::returnMarker() {
         args << "doeDemo.py" << "returnMarker(0.05, 0.05, urx.Robot('10.0.0.12'), board.get_pin(f'd:{8}:o'))";
         m_process->start("python3", args);
         disableOtherButtons(m_buttonReturnMarker);
-        m_timeout->start(30000);
+        m_timeout->start(m_timeoutDuration);
+        QTimer::singleShot(100, this, &MainWindow::updateTimeoutProgress);
     });
 }
 
@@ -191,7 +221,8 @@ void MainWindow::getGrinder() {
         args << "doeDemo.py" << "getGrinder(0.05, 0.05, urx.Robot('10.0.0.12'), board.get_pin(f'd:{8}:o'))";
         m_process->start("python3", args);
         disableOtherButtons(m_buttonGetGrinder);
-        m_timeout->start(30000);
+        m_timeout->start(m_timeoutDuration);
+        QTimer::singleShot(100, this, &MainWindow::updateTimeoutProgress);
     });
 }
 
@@ -202,6 +233,7 @@ void MainWindow::returnGrinder() {
         args << "doeDemo.py" << "returnGrinder(0.05, 0.05, urx.Robot('10.0.0.12'), board.get_pin(f'd:{8}:o'))";
         m_process->start("python3", args);
         disableOtherButtons(m_buttonReturnGrinder);
-        m_timeout->start(30000);
+        m_timeout->start(m_timeoutDuration);
+        QTimer::singleShot(100, this, &MainWindow::updateTimeoutProgress);
     });
 }
