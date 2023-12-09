@@ -1,14 +1,14 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include <QMainWindow>
+#include <QWidget>
 
 #include <QCamera>
 #include <QMediaCaptureSession>
 #include <QVideoSink>
 #include <QLabel>
 
-class Camera : public QMainWindow {
+class Camera : public QWidget {
     Q_OBJECT
 
 public:
@@ -20,7 +20,6 @@ private:
     QMediaCaptureSession captureSession;
     QVideoSink *m_videoSink;
     QLabel *m_videoLabel;
-
 };
 
 #endif // CAMERA_H

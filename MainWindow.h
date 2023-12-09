@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "Camera.h"
+
 #include <QMainWindow>
 
 #include <QPushButton>
@@ -50,6 +52,9 @@ private:
     /* timer(s) */
     QTimer *m_timeout;
     int m_timeoutDuration;
+
+    /* camera feed */
+    Camera *m_camera;
 };
 
 #endif // MAINWINDOW_H

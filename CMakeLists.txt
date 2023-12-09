@@ -30,14 +30,14 @@ set(PROJECT_SOURCES
         MainWindow.cpp
         MainWindow.h
         doeDemo.py
+        Camera.cpp
+        Camera.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ARC-ToolOperations
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        Camera.h
-        Camera.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ARC-ToolOperations APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

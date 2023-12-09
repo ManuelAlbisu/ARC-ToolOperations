@@ -12,6 +12,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     m_process = new QProcess(this);
 
+    /* initialize the camera */
+    m_camera = new Camera(this);
+
     /* draws vertical line in menu */
     QFrame *vLine = new QFrame();
     vLine->setFrameShape(QFrame::VLine);
@@ -39,9 +42,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     QHBoxLayout *homeButtonLayout = new QHBoxLayout();
     homeButtonLayout->addWidget(m_buttonReturnHome);
 
+    /* layout for camera feed */
+    QHBoxLayout *cameraLayout = new QHBoxLayout();
+    cameraLayout->addWidget(m_camera);
+
     /* aggregates all layouts into a central widget */
     QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout(centralWidget);
+    mainLayout->addLayout(cameraLayout);
     mainLayout->addLayout(topButtonLayout);
     mainLayout->addLayout(bottomButtonLayout);
     mainLayout->addWidget(hLine);

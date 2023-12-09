@@ -1,9 +1,9 @@
 #include "Camera.h"
 
-#include <QVideoFrame>
 #include <QImage>
+#include <QVideoFrame>
 
-Camera::Camera(QWidget *parent) : QMainWindow(parent), m_camera(new QCamera) {
+Camera::Camera(QWidget *parent) : QWidget(parent), m_camera(new QCamera) {
     m_videoLabel = new QLabel(this);
 
     m_videoSink = new QVideoSink();
@@ -17,6 +17,9 @@ Camera::Camera(QWidget *parent) : QMainWindow(parent), m_camera(new QCamera) {
 
     captureSession.setCamera(m_camera);
     captureSession.setVideoSink(m_videoSink);
+
+    setMinimumSize(400, 400);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     m_camera->start();
 }
